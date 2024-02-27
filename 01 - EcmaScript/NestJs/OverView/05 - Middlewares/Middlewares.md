@@ -1,6 +1,5 @@
 این middleware می تونه یه function و یا class باشه که قبل از Router Handler (ها) صدا زده میشه
-![](Notes/01%20-%20EcmaScript/NestJs/OverView/05%20-%20Middlewares/Images/img-01.png)
-![img-01.png](https://raw.githubusercontent.com/SoroushMomtahan/Notes/main/01%20-%20EcmaScript/NestJs/OverView/02%20-%20Middlewares/Images/img-01.png)
+![img-01.png (1481×314) (raw.githubusercontent.com)](https://raw.githubusercontent.com/SoroushMomtahan/Notes/main/01%20-%20EcmaScript/NestJs/OverView/05%20-%20Middlewares/Images/img-01.png)
 
 این function می تونه به دو object به نام request و response دسترسی داشته باشه و همچنین میتونه به next function هم دسترسی داشته باشه.
 
