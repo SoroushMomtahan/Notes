@@ -211,7 +211,7 @@ getDocs(@Query('version') version) {
   }
 ```
 
-![Alt 01.png](https://raw.githubusercontent.com/SoroushMomtahan/Notes/main/EcmaScript/NestJs/OverView/02 - Controllers/Images/img-01.png?raw=true)
+![img-01.png (763×253) (raw.githubusercontent.com)](https://raw.githubusercontent.com/SoroushMomtahan/Notes/main/01%20-%20EcmaScript/NestJs/OverView/02%20-%20Controllers/Images/img-01.png)
 
  اگه تایپ param رو any بزاریم می تونیم به `param.id` دسترسی داشته باشیم.
 

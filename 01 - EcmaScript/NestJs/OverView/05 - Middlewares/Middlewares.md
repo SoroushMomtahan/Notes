@@ -1,6 +1,6 @@
 این middleware می تونه یه function و یا class باشه که قبل از Router Handler (ها) صدا زده میشه
-
-![Alt Middleware](https://raw.githubusercontent.com/SoroushMomtahan/Notes/main/Public/Images/EcmaScript/NestJs/OverView/01.png?raw=true)
+![](Notes/01%20-%20EcmaScript/NestJs/OverView/05%20-%20Middlewares/Images/img-01.png)
+![img-01.png (763×253) (raw.githubusercontent.com)](https://raw.githubusercontent.com/SoroushMomtahan/Notes/main/01%20-%20EcmaScript/NestJs/OverView/02%20-%20Middlewares/Images/img-01.png)
 
 این function می تونه به دو object به نام request و response دسترسی داشته باشه و همچنین میتونه به next function هم دسترسی داشته باشه.
 
@@ -80,12 +80,9 @@ export class AppModule implements NestModule {
 }
 ```
 
-> پکیج Body-Parser
-> 
-> <aside> 💡 وقتی از Adapter پیش فرض nest یعنی express استفاده می کنیم ، بصورت پیش فرض json و urlencoded از پکیج body-parser رجیستر می شوند. حال اگر بخواهیم خودمان این دو middleware پیش فرض رو شخصی سازی کنیم باید این دو middleware رو با false کردن فلگ bodyParser غیر فعال کنیم.
-> 
-> </aside>
-
+پکیج Body-Parser
+>[!tip]
+>وقتی از Adapter پیش فرض nest یعنی express استفاده می کنیم ، بصورت پیش فرض json و urlencoded از پکیج body-parser رجیستر می شوند. حال اگر بخواهیم خودمان این دو middleware پیش فرض رو شخصی سازی کنیم باید این دو middleware رو با false کردن فلگ bodyParser غیر فعال کنیم.
 ```tsx
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {bodyParser:false});
@@ -98,18 +95,87 @@ bootstrap();
 
 داخل متد forRoutes می تونیم از string patern ها استفاده کنیم.
 
-اگر از fastify به جای express استفاده می کنیم این string patern ها در قالب پکیج [path-to-regexp](https://github.com/pillarjs/path-to-regexp#parameters) عرض می شوند.
+>[!warning]
+>اگر از fastify به جای express استفاده می کنیم این string patern ها در قالب پکیج [path-to-regexp](https://github.com/pillarjs/path-to-regexp#parameters) عرض می شوند.
 
 ```tsx
 forRoutes({ path: 'ab*cd', method: RequestMethod.ALL });
 ```
 
 ## **Middleware consumer——————————-**
+این `MiddlewareConsumer` یه `Helper Class` هست و همانطور که قبلا هم گفتیم یه سری متد رو **==برای مدیریت middleware==**  بصورت زنجیره ای در اختیارمون میزاره.
+
+در متد `apply` می تونیم middleware یا middleware هایی که قراره استفاده کنیم رو بدیم (چند middleware با کاما از هم جدا میشن)
+
+متد `forRoutes` هم می تونه string(s) ، controller(s) و یا object ای بگیره که مسیر (path) و نوع request method رو با استفاده از `enum RequestMethod` مشخص می کند.
+```typescript
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { CatsModule } from './cats/cats.module';
+import { CatsController } from './cats/cats.controller';
+
+@Module({
+  imports: [CatsModule],
+})
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes(CatsController);
+  }
+}
+```
 
 ## **Excluding routes——————————-**
+گاهی وقت ها می خوایم روی اکثر مسیر ها و یا Controller ها بجز محدود مسیر و یا controller هایی یه middleware رو set کنیم ، در این شرایط می تونیم از متد `exclude` استفاده کنیم.
+```typescript
+consumer
+  .apply(LoggerMiddleware)
+  .exclude(
+    { path: 'cats', method: RequestMethod.GET },
+    { path: 'cats', method: RequestMethod.POST },
+    'cats/(.*)',
+  )
+  .forRoutes(CatsController);
+```
+>[!tip]
+>متد `exclude` از wild card parameter های پکیج  [path-to-regexp](https://github.com/pillarjs/path-to-regexp#parameters) پشتیبانی میکنه
 
 ## **Functional middleware————————-**
+اگر نیازی نداریم که به middleware خود<u>option</u> ای پاس بدیم و یا <u>وابستگی</u> ای تزریق کنیم می تونیم از middleware بصورت function ای استفاده کنیم.
+`logger.middleware.ts`
+```typescript
+import { Request, Response, NextFunction } from 'express';
+
+export function logger(req: Request, res: Response, next: NextFunction) {
+  console.log(`Request...`);
+  next();
+};
+```
 
 ## **Multiple middleware—————————-**
+همونطور که قبلا هم گفته شد ، می تونیم به متد `apply()` چندین middleware پاس بدیم.
+```typescript
+consumer.apply(cors(), helmet(), logger).forRoutes(CatsController);
+```
 
 ## **Global middleware—————————-**
+اگه بخوایم یه middleware برای همه route های register شده اعمال بشه می تونیم با استفاده از متد `use()` در فایل main.ts این کار رو انجام بدیم:
+`main.ts`
+```typescript
+const app = await NestFactory.create(AppModule);
+app.use(logger);
+await app.listen(3000);
+```
+>[!hint]
+>لازم به ذکره که متد `use()` تنها function middleware قبول می کنه ، بنابراین اگر به تزریق وابستگی نیاز داریم و به طبع از class Middleware استفاده می کنیم متد use قادر به دریافت اون نیست.
+>بنابراین در صورتی که از class middleware استفاده می کنیم و می خواهید class middleware ای که ساخته اید بصورت global اعمال شود راهکار استفاده از متد `forRoutes('*')` هست:
+```typescript
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes('*');
+  }
+}
+```
