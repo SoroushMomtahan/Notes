@@ -211,8 +211,7 @@ getDocs(@Query('version') version) {
   }
 ```
 
-![[01.png]]
-[01.png (763×253) (raw.githubusercontent.com)](https://raw.githubusercontent.com/SoroushMomtahan/Notes/main/Public/Images/01.png?raw=true)
+![Alt 01.png](https://raw.githubusercontent.com/SoroushMomtahan/Notes/main/Public/Images/01.png?raw=true)
 
  اگه تایپ param رو any بزاریم می تونیم به `param.id` دسترسی داشته باشیم.
 
