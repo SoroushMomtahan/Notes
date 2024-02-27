@@ -211,7 +211,7 @@ getDocs(@Query('version') version) {
   }
 ```
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/5e86db0c-3d3f-4a3d-a68a-5ec0b47f544c/42f391c3-9cd6-47e6-b5a0-c4e834c47566/Untitled.png)
+![[01.png]]
 
  اگه تایپ param رو any بزاریم می تونیم به `param.id` دسترسی داشته باشیم.
 
