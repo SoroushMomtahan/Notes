@@ -103,7 +103,7 @@ forRoutes({ path: 'ab*cd', method: RequestMethod.ALL });
 ```
 
 ## **Middleware consumer——————————-**
-این `MiddlewareConsumer` یه `Helper Class` هست و همانطور که قبلا هم گفتیم یه سری متد رو **==برای مدیریت middleware==**  بصورت زنجیره ای در اختیارمون میزاره.
+این `MiddlewareConsumer` یه `Helper Class` هست و همانطور که قبلا هم گفتیم یه سری متد رو **رای مدیریت middleware**  بصورت زنجیره ای در اختیارمون میزاره.
 
 در متد `apply` می تونیم middleware یا middleware هایی که قراره استفاده کنیم رو بدیم (چند middleware با کاما از هم جدا میشن)
 
