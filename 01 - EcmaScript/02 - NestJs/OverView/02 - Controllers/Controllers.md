@@ -1,4 +1,11 @@
-برای ایجاد controller ها از class ها و decorator ها استفاده می کنیم ، decorator ها امکان دسترسی کلاس ها به `metaData` ها رو فراهم می کنند و همچنین Decorator ها nest رو مجاب به ایجاد سیستم مسیریابی می کند یا به بیان دیگر درخواست ها به controller های مربوطه گره می خورد.
+بطور کلی controller ها وظیفه مدیریت درخواست (request) با فرستادن response ای مناسب رو دارند.
+
+![](Pasted%20image%2020240228182302.png)
+
+در nest مکانیسم routing با controller عجین شده ، یعنی نیاز به ایجاد فایلی جدا برای ایجاد route ها ، ماندد کاری که در فریمورک express می کردیم ، نداریم.
+در واقع در nest ، سیستم routing بوسیله دکوراتور ها مدریت می شود.
+
+پس بطور کلی برای ایجاد controller ها به class و decorator ها نیاز داریم ،  decorator ها  به یه سری `metaData` ها دسترسی دارند و همچنین این Decorator ها هستند که  nest رو مجاب به ایجاد سیستم مسیریابی می کنند یا به بیان دیگر این دکوراتور ها هستند که درخواست ها رو به controller های مربوطه گره می زنند.
 
 ```tsx
 import { Controller, Get } from "@nestjs/common";
@@ -24,17 +31,17 @@ export default class UserController {
 
 Standard (recommended)————-
 
-این nest تا حد زیادی مسئولیت serialized کردن response رو برعهده می گیرد ؛ به این صورت که اگر controller ما بخواهد `array` یا `object` برگرداند ، nest آن را بصورت اتوماتیک به json سریالایز می کند و اگر controller بخواهد js primitive type مانند `string`, `number`, `boolean` همان مقادیر را بدون دستکاری و یا سریالایز کردن برمی گرداند.
+خود nest تا حد زیادی مسئولیت serialized کردن response رو برعهده می گیرد ؛ به این صورت که اگر controller ما بخواهد `array` یا `object` برگرداند ، nest آن را بصورت اتوماتیک به json سریالایز می کند و اگر controller بخواهد js primitive type مانند `string`, `number`, `boolean` برگداند ، همان مقادیر را بدون دستکاری و یا سریالایز کردن برمی گرداند.
 
 در واقع شعار nest این هست که شما مقداری که می خواید رو return کنید و بقیه کار ها رو به عهده ما بگذارید.
 
-بصورت پیش فرض همه درخواست های زده شده به یک controller دارای statusCode `200` هستند بجز درخواست زده شده به controller ای که httpRequestMethod POST هست که دارای statusCode `201` هست.
+بصورت پیش فرض همه درخواست های زده شده به یک controller دارای statusCode `200` هستند بجز درخواست زده شده به controller ای که http request method اش POST هست که در این صورت statusCode `200` هست.
 
- می توان این رفتار پیش فرض statusCode رو با استفاده از دیکورتور `@HttpCode(...)` تغییر داد
+ می توان این رفتار پیش فرض statusCode رو با استفاده از دکوراتور `@HttpCode(...)` تغییر داد.
 
 Library-specific——————-
 
-میشه کاری کنیم که بشه از سیستم ارسال response خود express استفاده کنیم که البته پیشنهاد نمیشه ، مگر برای برای موارد خاص
+میشه کاری کنیم که بتونیم از سیستم ارسال response خود express استفاده کنیم که البته پیشنهاد نمیشه ، مگر برای برای موارد خاص.
 
 ```tsx
 import { Controller, Get, Res } from "@nestjs/common";
@@ -49,11 +56,12 @@ export default class UserController {
 }
 ```
 
-هنگامی که response object را در controller مربوطه تزریق می کنیم ، در واقع مسئولیت فرستادن response رو از دوش nest برداتیم و وظیفه این کار رو به عهده گرفتیم ، پس اگر در این شرایط response نفرستیم ، برنامه هنگ می کند.
+هنگامی که response object را در controller مربوطه تزریق می کنیم ، در واقع مسئولیت فرستادن response رو از دوش nest برداشتیم و وظیفه این کار رو خودمون به عهده گرفتیم ، پس اگر در این شرایط response نفرستیم ، برنامه هنگ می کند.
+البته اگر `passthrough` رو برابر با true قرار بدیم می تونیم ضمن استفاده از response سیستم express مدیریت فرستادن res رو برعهده nest بگذاریم ، این کار زمانی کاربرد داره که می خوایم به object response برای موارد دیگری به جز فرستادن response دسترسی داشته باشیم (جلو تر درباره نحوه استفاده از passthrough توضیح داده شده)
 
 ## Request Object——————————-
 
-ممکنه نیاز به request object داشته باشیم ، پس نیاز به تزریق آن در controller مربوطه با استفاده از دکوراتور @Req داریم 
+ممکنه نیاز به request object داشته باشیم ، پس نیاز به تزریق آن در controller مربوطه با استفاده از دکوراتور `@Req()` داریم :
 
 ```tsx
 import { Controller, Get, Req } from '@nestjs/common';
@@ -86,7 +94,7 @@ export class CatsController {
 
 ## resource ——————————-
 
->[!tip] entity -> resource
+>[!tip] 
 >به entity ها در api نویسی resource می گن.
 
 ```tsx
@@ -159,26 +167,15 @@ create() {
 
 دکوراتور @Redirect() دو پارامتر `url` و `statusCode` رو به عنوان ورودی میگیره که اختیاری هم هستند.
 
-دیفالت statusCode `302` به معنای Found (قبلا جابه جایی موقت)
+دیفالت statusCode `302` برای redirection به معنای Found (قبلا جابه جایی موقت)
 
 ```tsx
 @Get()
 @Redirect('<https://nestjs.com>', 301)
 ```
 
-بررسی شود؟
-
-> HINT Routes with parameters should be declared after any static paths. This prevents the parameterized paths from intercepting traffic destined for the static paths.
-> 
-> ```
-> HttpRedirectResponse
-> ```
-> 
-> ```
-> @nestjs/common
-> ```
-
-Returned values will override any arguments passed to the `@Redirect()` decorator. For example:
+>[!tip]
+>باید route های داینامیک بعد از route های استاتیک در controller مربوطه شون قرار بگیرند.
 
 ## Route Queries—————————-
 
@@ -272,7 +269,7 @@ export class AccountController {
 
 ## **Scopes————————-**
 
-در این باره در بخش [**Injection scopes**](https://www.notion.so/Injection-scopes-150d6b9770b042eab3fcfcd6059ef540?pvs=21) می خوانیم.
+در این باره در بخش Scopes در این باره می خوانیم.
 
 ## **Asynchronicity—————————-**
 
@@ -296,13 +293,11 @@ findAll(): Observable<any[]> {
 }
 ```
 
-## Error Handling————————-
-
 ## **Request payloads—————————-**
 
 **محموله های درخواست————-**
 
-محموله های یا داده هایی که قرار است از سمت client ارسال شوند باید در سمت بک اند درون ظرفی ریخته شوند ؛ به ظرفی که برای این داده ها در نظر گرفته شده data transfer object یا `DTO` گویند که می تواند از جنس کلاس یا interface باشد
+محموله ها یا داده هایی که قرار است از سمت client ارسال شوند باید در سمت بک اند درون ظرفی ریخته شوند ؛ به ظرفی که برای این داده ها در نظر گرفته شده data transfer object یا `DTO` گویند که می تواند از جنس کلاس یا interface باشد
 
 برای اینکه interface در js وجود ندارد بهتر است این ظرف رو از جنس کلاس در نظر بگیریم تا nest بتواند در زمان اجرا نیز به متادیتا هایی دسترسی داشته باشد تا ضمن این دسترسی بتواند درخواست ارسال شده را validate کند تا اگر data ی ارسالی خارج از ظرف Dto تشکیل شده بود به نوعی اجازه ورود به کنترل مربوطه رو ندهد.
 
@@ -325,11 +320,11 @@ async create(@Body() createCatDto: CreateCatDto) {
 }
 ```
 
-طریقه کار validation payload ارسالی از request به این صورته که `ValidationPipe` ای وجود داره که یک white list ای داره ، که در این whiteList تنها property هایی مجاز اند دریافت شوند که جز property های dto class ما هستند.(البته تنظیماتی هم باید اعمال بشه)
+طریقه کار validation payload ارسالی از request به این صورته که `ValidationPipe` ای وجود داره که یک white list ای داره ، که در این whiteList تنها property هایی مجاز اند دریافت شوند که جز property های dto class ما هستند.(البته تنظیماتی هم باید اعمال بشه ، میشه به پارامتر دوم `@Body()` نمونه یا خود کلاس ValidationPipe رو بدیم که در بخش Pipes در این باره صحبت میشه)
 
 ## **Handling errors—————————-**
 
-در این باره در بخش [**[Exception filters](https://docs.nestjs.com/exception-filters)**]([https://www.notion.so/Exception-filters-cc650dd36d6b4c45a9eb25b013bca93f?pvs=21](https://www.notion.so/Exception-filters-cc650dd36d6b4c45a9eb25b013bca93f?pvs=21)) می خونیم.
+در بخش Exception Filter در این باره می خوانیم.
 
 ## **Full resource sample————————-**
 
@@ -366,13 +361,15 @@ export class CatsController {
 }
 ```
 
-بسیاری از کار های تکراری مانند ساخت controller برای resource ها رو بوسیله cli بصورت خودکار میشه انجام داد.
-
+بسیاری از کار های تکراری مانند ساخت controller برای resource ها رو بوسیله `cli` بصورت خودکار میشه انجام داد.
+```powershell
+nest g controller [name]
+```
 ## Getting up and running————————-
 
-وقتی یک controoler می سازیم ، nest از وجود این controoler اطلاعی ندارد و نمی تواند نمونه ای از controller ایجاد شده توسط ما بسازد
+وقتی یک controller می سازیم ، nest از وجود این controller اطلاعی ندارد و نمی تواند نمونه ای از controller ایجاد شده توسط ما بسازد
 
-در نست controller ها همیشه به فایل ماژول تعلق دارند و آنها را در آرایه از controller ها در دکوراتور `@module` تعریف می کنیم.
+در نست controller ها همیشه به فایل ماژول تعلق دارند و آنها را در آرایه ای از controller ها در دکوراتور `@module` تعریف می کنیم.
 
 ```tsx
 import { Module } from '@nestjs/common';
@@ -385,6 +382,7 @@ export class AppModule {}
 ```
 
 دکوراتور @Module() میاد controller ها رو به metaData کلاس `AppModule` ضمیمه می کنه و این باعث میشه تا nest بفهمه چه controller هایی نصب شده.
+و به طور کلی همه دکوراتور ها به `metadata` برنامه برای انجام کار های مختلف دسترسی دارند.
 
 ## **Library-specific approach———————-**
 
