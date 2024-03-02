@@ -1,6 +1,6 @@
 این middleware می تونه یه function و یا class باشه که قبل از Router Handler (ها) صدا زده میشه
 
-![img-01.png (1481×314) (raw.githubusercontent.com)](https://raw.githubusercontent.com/SoroushMomtahan/Notes/main/01%20-%20EcmaScript/NestJs/OverView/05%20-%20Middlewares/Images/img-01.png)
+![](./Images/img-01.png)
 
 این function می تونه به دو object به نام request و response دسترسی داشته باشه و همچنین میتونه به next function هم دسترسی داشته باشه.
 
@@ -137,12 +137,16 @@ consumer
     'cats/(.*)',
   )
   .forRoutes(CatsController);
+  
 ```
+
 >[!tip]
 >متد `exclude` از wild card parameter های پکیج  [path-to-regexp](https://github.com/pillarjs/path-to-regexp#parameters) پشتیبانی میکنه
 
 ## **Functional middleware————————-**
+
 اگر نیازی نداریم که به middleware خود**option** ای پاس بدیم و یا **وابستگی** ای تزریق کنیم می تونیم از middleware بصورت function ای استفاده کنیم.
+
 `logger.middleware.ts`
 ```typescript
 import { Request, Response, NextFunction } from 'express';
@@ -154,22 +158,28 @@ export function logger(req: Request, res: Response, next: NextFunction) {
 ```
 
 ## **Multiple middleware—————————-**
+
 همونطور که قبلا هم گفته شد ، می تونیم به متد `apply()` چندین middleware پاس بدیم.
+
 ```typescript
 consumer.apply(cors(), helmet(), logger).forRoutes(CatsController);
 ```
 
 ## **Global middleware—————————-**
+
 اگه بخوایم یه middleware برای همه route های register شده اعمال بشه می تونیم با استفاده از متد `use()` در فایل main.ts این کار رو انجام بدیم:
+
 `main.ts`
 ```typescript
 const app = await NestFactory.create(AppModule);
 app.use(logger);
 await app.listen(3000);
 ```
+
 >[!tip]
 >لازم به ذکره که متد `use()` تنها function middleware قبول می کنه ، بنابراین اگر به تزریق وابستگی نیاز داریم و به طبع از class Middleware استفاده می کنیم متد use قادر به دریافت اون نیست.
 >بنابراین در صورتی که از class middleware استفاده می کنیم و می خواهید class middleware ای که ساخته اید بصورت global اعمال شود راهکار استفاده از متد `forRoutes('*')` هست:
+
 ```typescript
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
