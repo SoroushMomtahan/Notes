@@ -1,6 +1,6 @@
 بطور کلی nest سیستمی برای مدیریت خطا (Exception Layer) داره که مسئولیت مدیریت کردن خطا های handler نشده در برنامه رو بر عهده داره.
 
-![](./Images/Pasted%20image%2020240228202035.png)
+![](Pasted%20image%2020240228202035.png)
 
 این کار یعنی مدیریت خطا توسط یه فیلتر (**global exception filter**) انجام میشه که خطا هایی رو که از نوع کلاس `HtppException` و یا زیر کلاس های آن هستند رو handler میکنه.
 
@@ -104,6 +104,17 @@ async findAll() {
 }
 ```
 
+مثالی دیگر:
+```ts
+export class MyException extends  HttpException{  
+  constructor(  
+  
+  ) {  
+    super('MyException', HttpStatus.BAD_GATEWAY, {cause:'Hello', description:'ddd'});  
+    console.log(this.stack);  
+  }  
+}
+```
 ## Built-in HTTP exceptions---------------
 
 فریمورک nest یه سری exception استاندارد که از HttpException ارث بری کردن رو ارائه کرده:
@@ -209,7 +220,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
 اتصال فیلتری که ساختیم 
 
-حالا میایم فیلتری که ساختیم رو به متد یا متد های کنترلی که می خوایم استفاده از دکوراتور `@UseFilters` اضافه می کنیم:
+حالا میایم فیلتری که ساختیم رو به متد یا متد های کنترلی که می خوایم از این فیلتر استفاده کنند ، می دهیم  
+پس دکوراتور `@UseFilters` رو بالای متد یا controlle مورد نظر اضافه می کنیم:
 
 `cats.controller.ts`
 ```typescript
@@ -311,7 +323,7 @@ export class AppModule {}
 
 می تونیم custom filter های اختصاصی خودمون رو بسازیم همونطور که در بالاتر این کارو با پیاده سازی اینترفیس ExceptionFilter انجام دادیم
 
-اما ممکنه از exception filter داخلی nest بهمراه شخصی سازی هایی استفاده کنیم 
+اما ممکنه بخواهیم از exception filter داخلی nest بهمراه شخصی سازی هایی استفاده کنیم 
 در این حالت از کلاس `BaseExceptionFilter` ارث بری می کنیم:
 
 `my-exceptions.filter.ts`

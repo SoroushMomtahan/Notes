@@ -1,6 +1,6 @@
 این middleware می تونه یه function و یا class باشه که قبل از Router Handler (ها) صدا زده میشه
 
-![](./Images/img-01.png)
+![](Notes/01%20-%20EcmaScript/02%20-%20NestJs/01%20-%20OverView/05%20-%20Middlewares/Images/img-01.png)
 
 این function می تونه به دو object به نام request و response دسترسی داشته باشه و همچنین میتونه به next function هم دسترسی داشته باشه.
 

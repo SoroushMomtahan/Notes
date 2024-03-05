@@ -1,6 +1,6 @@
 بطور کلی controller ها وظیفه مدیریت درخواست (request) با فرستادن response ای مناسب رو دارند.
 
-![](./Images/Pasted%20image%2020240228182302.png)
+![](Pasted%20image%2020240228182302.png)
 
 در nest مکانیسم routing با controller عجین شده ، یعنی نیاز به ایجاد فایلی جدا برای ایجاد route ها ، ماندد کاری که در فریمورک express می کردیم ، نداریم.
 در واقع در nest ، سیستم routing بوسیله دکوراتور ها مدریت می شود.
@@ -18,6 +18,13 @@ export default class UserController {
   }
 }
 ```
+
+برای ایجاد یک controller توسط nest cli ، از دستور زیر استفاده می کنیم:
+
+```bash
+nest generate controller
+```
+
 
 ## Routing——————————-
 

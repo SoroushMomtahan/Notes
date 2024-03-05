@@ -2,7 +2,7 @@
 
 این @Module() ابرداده (meta data) هایی می سازد که به ساختار بندی برنامه های nest ای کمک می کند.
 
-![](./Images/Pasted%20image%2020240228201324.png)
+![](Pasted%20image%2020240228201324.png)
 
 هر برنامه دست کم یک ماژول رو داره و اونم ماژول ریشه (root module) هست.
 
@@ -70,7 +70,7 @@ import { CatsModule } from './cats/cats.module';
 export class AppModule {}
 ```
 
-![](./Images/Pasted%20image%2020240228195149.png)
+![](Pasted%20image%2020240228195149.png)
 
 ## **Shared modules—————————-**
 
@@ -78,7 +78,7 @@ export class AppModule {}
 
 در nest بصورت پیش فرض module ها singleton اند بدین ترتیب در زمان استفاده از یک provider می دانیم که تنها یک نمونه از provider مربوطه ساخته شده است و در اختیار تزریق شوندگان قرار گرفته است.
 
-![](./Images/Pasted%20image%2020240228195302.png)
+![](Pasted%20image%2020240228195302.png)
 
 >[!tip]
 > مثلا در تصویر بالا تنها یک نمونه از provider های shared module در اختیار دیگر module ها قرار گرفته است.
