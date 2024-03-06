@@ -1,4 +1,4 @@
-در واقع AppModule به عنوان RottModule ما شناخته میشه که تمام smallModule های موجود در برنامه ما رو در برمیگیره ، در واقع smallModule های برنامه ما ، در این ماژول ثبت می شوند تا به سیستم nest شناسونده بشن.
+در واقع AppModule به عنوان Root module ما شناخته میشه که تمام small module های موجود در برنامه ما رو در برمیگیره ، در واقع small module های برنامه ما ، در این ماژول ثبت می شوند تا به سیستم nest شناسونده بشن.
 
 ```ts
 import { Module } from '@nestjs/common';  
@@ -12,3 +12,4 @@ import { AppService } from './app.service';
 export class AppModule {}
 ```
 
+با استفاده از دکوراتور `@Module()` کلاس AppModule رو گسترش دادیم.
