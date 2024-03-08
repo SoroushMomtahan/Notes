@@ -1,8 +1,8 @@
-بطور کلی nest سیستمی برای مدیریت خطا (Exception Layer) داره که مسئولیت مدیریت کردن خطا های handler نشده در برنامه رو بر عهده داره.
+بطور کلی nest لایه ای بصورت داخلی برای مدیریت خطا (Built-in Exception Layer) داره که مسئولیت مدیریت کردن خطا های handler نشده و خطا های از نوع کلاس `HttpException` در برنامه رو بر عهده داره.
 
 ![](Pasted%20image%2020240228202035.png)
 
-این کار یعنی مدیریت خطا توسط یه فیلتر (**global exception filter**) انجام میشه که خطا هایی رو که از نوع کلاس `HtppException` و یا زیر کلاس های آن هستند رو handler میکنه.
+همانطور که گفتیم این لایه (**global exception filter**) علاوه بر مدیریت کردن خطا های handler نشده ، خطا هایی رو که از نوع کلاس `HtppException` و یا زیر کلاس های آن هستند رو نیز handler میکنه.
 
 حالا اگه یه خطایی رخ بده که از جنس این کلاس (HttpException) یا زیر مجموعه هاش نیستند ، سیستم توکار **global exception filter** پیام خطایی با محتوای زیر رو نشون میده:
 
@@ -42,8 +42,8 @@ async findAll() {
 }
 ```
 
-حالا `constructor HttpException` دو تا پارامتر ورودی ، مورد نیازشه :
-- آرگومان اول `response` هست که بدنه json ای به عنوان response می فرستیم رو مشخص میکنه و می تونه از نوع `string` و یا `object` باشه.
+حالا سازنده `HttpException` دو تا پارامتر ورودی ، مورد نیازشه :
+- آرگومان اول اسمش `response` هست که بدنه json ای که می خوایم به عنوان response بفرستیم رو مشخص میکنه و می تونه از نوع `string` و یا `object` باشه.
 - آرگومان دوم `status` هست ، که یه http status code رو میگیره.
 
 حالا  json ای است که به عنوان response فرستاده میشه ، بدنه اش (Json response body) بصورت پیش فرض شامل دو تا property هست:
@@ -77,10 +77,11 @@ async findAll() {
 }
 ```
 
+پارامتر سوم هم که اختیاریه و می تونه یه object با دو تا property به نام `cause` و `description` بگیره.
 
 ## Custom exceptions---------------
 
-در بیشتر موارد ، نیازی به custom exception نداریم و Exception Filter داخلی خود nest که پشت پرده از کلاس HttpException استفاده میکنه ، می تونه کار ما رو راه بندازه
+در بیشتر موارد ، نیازی به custom exception نداریم و کلاس HttpException داخلی خود nest می تونه کار ما رو راه بندازه
 اما به هر دلیل اگر نیاز به custom exception شد بهتره کلاس مورد نظر خود را با ارث بری از HttpException بنویسیم:
 
 `forbidden.exception.ts`
@@ -105,6 +106,7 @@ async findAll() {
 ```
 
 مثالی دیگر:
+
 ```ts
 export class MyException extends  HttpException{  
   constructor(  
@@ -115,9 +117,10 @@ export class MyException extends  HttpException{
   }  
 }
 ```
+
 ## Built-in HTTP exceptions---------------
 
-فریمورک nest یه سری exception استاندارد که از HttpException ارث بری کردن رو ارائه کرده:
+فریمورک nest یه سری exception استاندارد داخلی که از HttpException ارث بری کردن رو ارائه کرده:
 
 - `BadRequestException`
 - `UnauthorizedException`
@@ -141,7 +144,7 @@ export class MyException extends  HttpException{
 - `PreconditionFailedException`
 
 مثلا `BadRequestException` چون statusCode ش از قبل مشخص شده دیگه پارامتر statusCode نداره 
-پارمتر سوم هم optional هست که یه object هست که می تونه دو ویژگی `cause` و `description` vرو بگیره: 
+پارمتر سوم هم optional هست که یه object هست که می تونه دو ویژگی `cause` و `description` رو بگیره: 
 
 ```typescript
 throw new BadRequestException('Something bad happened', { cause: new Error(), description: 'Some error description' })
@@ -155,24 +158,24 @@ throw new BadRequestException('Something bad happened', { cause: new Error(), de
 }
 ```
 
+مقدار property ی description تحت عنوان property ی error در خروجی چاپ میشه.
+
 >[!tip]
 >لازم به ذکره که این پارمتر سوم در کلاس پایه HttpEception نیز وجود داره.
 
 ## Exception filters----------------
 
-خود exception filter بطور خودکار هر error ای رو مدیریت میکنه ، با این حال می تونیم کنترل کاملی (full controller) روی این لایه داشته باشیم.
+خود exception filter بطور خودکار هر error ای رو مدیریت میکنه ، با این حال می تونیم exception filter layer سفارشی خودمون رو بنویسیم.
 
-مثلا فرض کنید ، می خواهیم یه logger به این لایه اضافه کنیم و یا ساختار json ای که به عنوان response میفرستیم رو بسته به فاکتور های مختلف عوض کنیم
+مثلا فرض کنید ، می خواهیم این لایه یه logger داشته باشه و یا ساختار json ای که به عنوان response میفرستیم رو بسته به فاکتور های مختلف عوض کنیم
 
-پس یعنی می تونیم کنترل کاملی روی جریان (flow) و محتوا (content) ارسالی خطا داشته باشیم.
+پس یعنی می تونیم کنترل کاملی روی جریان (flow) و محتوا (content) ارسالی خطا با تعریف یه exception filter اختصاصی  ، داشته باشیم.
 
 ---
 
 بیایم یه exception filter بسازیم که مسئول catch کردن exception هایی که نمونه ای از کلاس HttpException اند ، می باشد.
 
-برای انجام این کار نیاز به دسترسی به request و response هم داریم :
-- به request برای دسترسی به url مربوطه 
-- به response برای ارسال json مربوطه 
+این exception filter یه کلاسه که اینترفیس `ExceptionFilter` رو پیاده سازی کرده و بالاش از دکوراتور `@Catch()` استفاده شده (این دکوراتور مشخص می کند که exception filter ساخته شده برای چه نوع خطا هایی باشد)
 
 `http-exception.filter.ts`
 ```typescript
@@ -199,28 +202,28 @@ export class HttpExceptionFilter implements ExceptionFilter {
 ```
 
 >[!tip]
->همه exception filter ها باید از اینترفیس `ExceptionFilter<T<` vرو پیاده سازی کنند.
+>همه exception filter ها باید اینترفیس `ExceptionFilter<T<`رو پیاده سازی کنند.
 >این پیاده سازی ، شما رو مجبور به ایجاد متدی به نام `catch(exception: T, host: ArgumentsHost)` می کند.
 
 دکوراتور `@Catch(HttpException)` دو کار انجام میده:
-- یه سری metaData مورد نیاز رو به HttpExceptionFilter اضافه می کند 
-- و به nest می گوید این CustomFilter نوشته شده قراره Exception هایی که از نوع کلاس HttpException اند رو filter کنه.
+- یه سری metaData مورد نیاز رو به کلاس HttpExceptionFilter اضافه می کند 
+- و به nest می گوید این Custom exception filter نوشته شده قراره Exception هایی که از نوع کلاس HttpException اند رو filter کنه.
 - همین دو کار و بس!
 
 این دکوراتور می تونه یه پارامتر یا چندین پارامتر ورودی بگیره ، که چندین پارامتر به شما اجازه میده تعیین کنید این filter برای چه کلاس هایی از Exception باشد.
 
 ## Arguments host------------
 
-در مثال بالا به منبع شی های request و response که در واقع مربوط به request handler هستند (request handler در این مثال کنترلی هست که exception داده) نیازمندیم .
+منبع دو شی request و response بالا مربوط به route handler ای هست که exception داده است.
 
-کلاس ArgumentHost یه ابزار قدرتمند هست که در همه زمینه ها مورد استفاده قرار میگیرد و یکی از موارد استفاده اش در مثال بالا مشخص شده است که بوسیله نمونه ای از این کلاس و helper function هایش توانسته ایم به request و response دسترسی پیدا کنیم.
+کلاس `ArgumentHost` یه ابزار قدرتمند هست که در همه زمینه ها مورد استفاده قرار میگیرد و یکی از موارد استفاده اش در مثال بالا مشخص شده است که بوسیله نمونه ای از این کلاس و helper function هایش توانسته ایم به request و response دسترسی پیدا کنیم.
 
 در باره این بخش در قسمت های بعدی بیشتر می خوانیم.
 ## Binding filters--------------
 
 اتصال فیلتری که ساختیم 
 
-حالا میایم فیلتری که ساختیم رو به متد یا متد های کنترلی که می خوایم از این فیلتر استفاده کنند ، می دهیم  
+حالا میایم فیلتری که ساختیم رو به متد یا متد های کنترلی (router handler) که می خوایم از این فیلتر استفاده کنند ، می دهیم  
 پس دکوراتور `@UseFilters` رو بالای متد یا controlle مورد نظر اضافه می کنیم:
 
 `cats.controller.ts`
@@ -301,16 +304,15 @@ export class AppModule {}
 ```
 
 >[!tip]
->باید به این نکته توجه داشت که ، صرف نظر از اینکه filter مربوطه در کدام ماژول ثبت میشه ، این فیلتر global خواهد بود ، یعنی در ماژول های دیگه هم میشه از این فیلتر استفاده کرد ؛ پس در واقع بهترین جا برای ثبت filter ها آن ماژولی هست که از آن فیلتر استفاده کرده
+>باید به این نکته توجه داشت که ، در این روش یعنی ثبت exception filter در سطح ماژول ، صرف نظر از اینکه filter مربوطه در کدام ماژول ثبت میشه ، این فیلتر global خواهد بود ، یعنی در ماژول های دیگه هم میشه از این فیلتر استفاده کرد ؛ پس در واقع بهترین جا برای ثبت filter ها آن ماژولی هست که از آن فیلتر استفاده کرده
 
 >[!tip]
 >لازم به ذکره که استفاده از property ای با نام useClass تنها راه ثبت یک custom filter نیست
 >در ادامه و در بخش های آینده در این باره صحبت میشه
 
-
 ## Catch everything----------------
 
-اگر بخوایم همه error های ، صرف نظر از اینکه از چه نوعی هستند رو بگیریم ، به دکوراتور `@Catch()` پارامتر ورودی نمی دیم.
+اگر بخوایم همه error ها ، صرف نظر از اینکه از چه نوعی هستند رو بگیریم ، به دکوراتور `@Catch()` پارامتر ورودی نمی دیم.
 
 ادامه بخش رو مثالی از Adapter زده که بعدا (وقتی Adapeter رو فهمیدیم ) کامل میشه
 
@@ -321,8 +323,7 @@ export class AppModule {}
 
 ## Inheritance------------------
 
-می تونیم custom filter های اختصاصی خودمون رو بسازیم همونطور که در بالاتر این کارو با پیاده سازی اینترفیس ExceptionFilter انجام دادیم
-
+همانطور که دیدید در بالا custom exception اختصاصی خودمون رو ساختیم ، 
 اما ممکنه بخواهیم از exception filter داخلی nest بهمراه شخصی سازی هایی استفاده کنیم 
 در این حالت از کلاس `BaseExceptionFilter` ارث بری می کنیم:
 

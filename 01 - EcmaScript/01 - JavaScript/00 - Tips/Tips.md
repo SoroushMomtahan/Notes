@@ -13,4 +13,8 @@ if(cont === 0){}
 
 ---
 
+```ts
+document.designMode = 'on'
+```
+
 

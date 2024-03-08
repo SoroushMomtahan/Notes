@@ -113,7 +113,7 @@ export class CatsController {
 }
 ```
 
-در کد بالا گفتیم که آقا این چیزی که می خوای تزریق کنی رو به constructor ما تزریق کن.
+در کد بالا گفتیم که آقا این چیزی که می خوای تزریق کنی رو به constructor مون تزریق کن.
 
 ## **Dependency injection————————-**
 

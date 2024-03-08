@@ -1,19 +1,18 @@
-این middleware می تونه یه function و یا class باشه که قبل از Router Handler (ها) صدا زده میشه
+این middleware می تونه یه function و یا class باشه که قبل از **Router Handler** (ها) صدا زده میشه
 
 ![](Notes/01%20-%20EcmaScript/02%20-%20NestJs/01%20-%20OverView/05%20-%20Middlewares/Images/img-01.png)
 
-این function می تونه به دو object به نام request و response دسترسی داشته باشه و همچنین میتونه به next function هم دسترسی داشته باشه.
+همچنین متد `use` از این Middleware می تونه به دو object به نام **request** و **response** دسترسی داشته باشه و همچنین میتونه به **next function** هم دسترسی داشته باشه.
 
 می تونیم middleware های شخصی سازی شده ای رو با استفاده از روش `function` ای و یا `class` ای بوجود بیاریم.
 
 **روش کلاسی ——————-**
 
-اگر از روش کلاسی بریم ، باید از دکوراتور تزریقی `@Injectable()` بالای کلاس استفاده کنیم.
+اگر از روش کلاسی بریم ، باید از دکوراتور  `@Injectable()` بالای کلاس استفاده کنیم.
 
 همچنین این کلاس باید interface ای به نام `NestMiddleware` رو implement کند.
 
 `logger.middleware.ts`
-
 ```tsx
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
@@ -28,6 +27,12 @@ export class LoggerMiddleware implements NestMiddleware {
 
 ```
 
+هر کلاسی که این interface رو implement میکنه باید متد `use()` رو پیاده سازی کنه.
+این متد در آرگومان ورودی دو شی `request` و `response` و همچنین تابع `next` رو میگیره.
+
+**روش تابعی ——————-**
+
+روش تابعی در ادامه همین بخش توضیح داده خواهد شد.
 ## **Dependency injection————————-**
 
 درست مانند Controller ها و Provider ها ، به class Middleware ها نیز میشه چیزی تزریق کرد.
@@ -55,14 +60,13 @@ export class AppModule implements NestModule {
 }
 ```
 
-کلاس MiddlewareConsumer یا مصرف کننده متد هایی رو بصورت `chain` در اختیار ما میزاره
+کلاس MiddlewareConsumer یا مصرف کننده ، متد هایی رو بصورت `chain` در اختیار ما میزاره
 
 در متد `apply` می تونیم middleware یا middleware هایی که قراره استفاده کنیم رو بدیم (چند middleware با کاما از هم جدا میشن)
 
-متد `forRoutes` هم می تونه string(s) ، controller(s) و یا object ای بگیره که مسیر (path) و نوع request method رو با استفاده از `enum RequestMethod` مشخص می کند.
+متد `forRoutes` هم می تونه string(s) ، controller(s) و یا object ای بگیره که مسیر (`path`) و نوع request `method` رو با استفاده از `enum RequestMethod` مشخص می کند.
 
 **`app.module.ts`**
-
 ```tsx
 import { Module, NestModule, RequestMethod, MiddlewareConsumer } from '@nestjs/common';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
@@ -81,8 +85,9 @@ export class AppModule implements NestModule {
 ```
 
 پکیج Body-Parser
->[!tip]
->وقتی از Adapter پیش فرض nest یعنی express استفاده می کنیم ، بصورت پیش فرض json و urlencoded از پکیج body-parser رجیستر می شوند. حال اگر بخواهیم خودمان این دو middleware پیش فرض رو شخصی سازی کنیم باید این دو middleware رو با false کردن فلگ bodyParser غیر فعال کنیم.
+
+وقتی از Adapter پیش فرض nest یعنی express استفاده می کنیم ، بصورت پیش فرض json و urlencoded از پکیج body-parser رجیستر می شوند. حال اگر بخواهیم خودمان این دو middleware پیش فرض رو شخصی سازی کنیم باید این دو middleware رو با false کردن فلگ bodyParser غیر فعال کنیم.
+
 ```tsx
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {bodyParser:false});
@@ -93,7 +98,7 @@ bootstrap();
 
 ## **Route wildcards—————————-**
 
-داخل متد forRoutes می تونیم از string patern ها استفاده کنیم.
+داخل متد forRoutes می تونیم از string pattern ها استفاده کنیم.
 
 >[!warning]
 >اگر از fastify به جای express استفاده می کنیم این string patern ها در قالب پکیج [path-to-regexp](https://github.com/pillarjs/path-to-regexp#parameters) عرض می شوند.
@@ -103,11 +108,13 @@ forRoutes({ path: 'ab*cd', method: RequestMethod.ALL });
 ```
 
 ## **Middleware consumer——————————-**
-این `MiddlewareConsumer` یه `Helper Class` هست و همانطور که قبلا هم گفتیم یه سری متد رو **رای مدیریت middleware**  بصورت زنجیره ای در اختیارمون میزاره.
+
+این `MiddlewareConsumer` یه `Helper Class` هست و همانطور که قبلا هم گفتیم یه سری متد رو **برای مدیریت middleware**  بصورت زنجیره ای در اختیارمون میزاره.
 
 در متد `apply` می تونیم middleware یا middleware هایی که قراره استفاده کنیم رو بدیم (چند middleware با کاما از هم جدا میشن)
 
 متد `forRoutes` هم می تونه string(s) ، controller(s) و یا object ای بگیره که مسیر (path) و نوع request method رو با استفاده از `enum RequestMethod` مشخص می کند.
+
 ```typescript
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
@@ -127,7 +134,7 @@ export class AppModule implements NestModule {
 ```
 
 ## **Excluding routes——————————-**
-گاهی وقت ها می خوایم روی اکثر مسیر ها و یا Controller ها بجز محدود مسیر و یا controller هایی یه middleware رو set کنیم ، در این شرایط می تونیم از متد `exclude` استفاده کنیم.
+گاهی وقت ها می خوایم روی اکثر مسیر ها و یا Controller ها بجز محدود مسیر و یا controller هایی یه middleware رو set کنیم ، در این شرایط می تونیم از متد `exclude` به معنای حذف کردن استفاده کنیم.
 ```typescript
 consumer
   .apply(LoggerMiddleware)
@@ -176,9 +183,8 @@ app.use(logger);
 await app.listen(3000);
 ```
 
->[!tip]
->لازم به ذکره که متد `use()` تنها function middleware قبول می کنه ، بنابراین اگر به تزریق وابستگی نیاز داریم و به طبع از class Middleware استفاده می کنیم متد use قادر به دریافت اون نیست.
->بنابراین در صورتی که از class middleware استفاده می کنیم و می خواهید class middleware ای که ساخته اید بصورت global اعمال شود راهکار استفاده از متد `forRoutes('*')` هست:
+لازم به ذکره که متد `use()` تنها function middleware قبول می کنه ، بنابراین اگر به تزریق وابستگی نیاز داریم و به طبع از class Middleware استفاده می کنیم متد use قادر به دریافت اون نیست.
+بنابراین در صورتی که از class middleware استفاده می کنیم و می خواهید class middleware ای که ساخته اید بصورت global اعمال شود راهکار استفاده از متد `forRoutes('*')`  در سطح ماژول هست:
 
 ```typescript
 export class AppModule implements NestModule {
@@ -189,3 +195,8 @@ export class AppModule implements NestModule {
   }
 }
 ```
+
+میدلور ها ذاتا احمق اند ، احمق از این جهت که اطلاعی ندارن که کی اونا رو صدا زده و یا بعد از اونا قراره چه اتفاقی بیفته (مثلا کدام middleware یا controller) اجرا بشه.
+
+سازنده nest یه سری قابلیت جدید مانند `Exception filter` و `Pipes` و `Guards` و `Interceptor` ارائه داد که در واقع یه جورایی میشه گفت middleware هستند اما middleware هایی باهوش (به لطف کلاس `ArgumentsHost`) هستند که می دونن بعدشون چه اتفاقی میفته و همچنین هر کدامشون برای کاری خاص استفاده می شوند.
+
