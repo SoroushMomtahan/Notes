@@ -316,6 +316,9 @@ export class ValidationPipe implements PipeTransform<any> {
 
 پس ، از متد `palinToInstance` از پکیج `class-transformer` استفاده کردیم ، این متد در پارامتر اولش نوعی که value باید داشته باشه رو میگیره و در پارامتر دوم خود value رو میگیره و به این صورت Value رو بر اساس پارامتر اول برجسب گذاری میکنه و نتیجه رو یک همان value اما با برچسب گذاری شده هست رو Return میکنه ، در گام بعد می تونیم این value رو برای ارزیابی معتبر بودن یا نبودن به متد `validate` بدیم.
 
+>[!tip]
+>البته خود `ValidationPipe` داخلی nest به خوبی از پس همه چی بر میاد و نیاز به نوشتن موارد بالا نبود.
+
 ----
 
 در پایین هم pipe ای که نوشتیم رو متصل کردیم ، لازم به ذکر هست که این اتصال میتونه` global-scoped` یا `controller-scoped` یا `method-scoped` و یا مانند مثال پایین `parameter-scoped` باشه:

@@ -130,6 +130,13 @@ export class CatsController {
 
 `@Get()`, `@Post()`, `@Put()`, `@Delete()`, `@Patch()`, `@Options()`, and `@Head()`. In addition, `@All()` defines an endpoint that handles all of them.
 
+```tsx
+@Path(':id')
+update(@Param('id') id, @Body() body) {
+  return 'This route update only recived property';
+}
+```
+
 ## Route wildcards———————-
 
 ```tsx
@@ -211,6 +218,8 @@ export class CatsController implements HttpRedirectResponse {
 
 در این حالات اولویت با redirect شدن به url درون return است و دکوراتور `@Redirect()` کار نمی کند.
 
+در ضمن باید حتما `@Redirect()` حتی در صورتی که می خواهیم redirect داینامیک باشد نوشته شود.
+
 ## Route Queries—————————-
 
 ```tsx
@@ -231,6 +240,16 @@ getDocs(@Query('version') version) {
   getHello(@Query() query:string[]) {
     return query;
   }
+```
+
+مثال pagination با استفاده از `query parameter`:
+
+```ts
+@Get()
+findAll(@Query() paginationQuery){
+	const {limit, offset} = paginationQuery;
+	return `this action return all users. Limit: ${limit} Offset:${offeset}`
+}
 ```
 
 ## **Route parameters———————-**
@@ -276,6 +295,9 @@ getHello(@Param('id') id:number) {
 	return id;
 }
 ```
+
+>[!tip]
+>دقت کنید که در صورتی که string به `@Param()` یا `@Body()` یا `@Query()` پاس می دیم اگر از validation استفاده می کنیم validation تنها روی همان property مشخص شده نجام میشه و بقیه property ها validate نمی شن.
 
 ## **Sub-Domain Routing—————————-**
 
@@ -345,6 +367,10 @@ findAll(): Observable<any[]> {
 
 محموله ها یا داده هایی که قرار است از سمت client ارسال شوند باید در سمت بک اند درون ظرفی ریخته شوند ؛ به ظرفی که برای این داده ها در نظر گرفته شده data transfer object یا `DTO` گویند که می تواند از جنس کلاس یا interface باشد
 
+>[!tip]
+>بطورکلی از dto class ها برای مدیریت تایب ورودی و خروجی ، استفاده میشه.
+ >در واقع dto-class ها شکل (shape) داده ورودی و خروجی رو مشخص میکنند.
+ 
 برای اینکه interface در js وجود ندارد بهتر است این ظرف رو از جنس کلاس در نظر بگیریم تا nest بتواند در زمان اجرا نیز به متادیتا هایی دسترسی داشته باشد مثلا pipe ها metadata ی value رو بررسی می کنند و اگر از dto interface ها بجای dto class ها استفاده کنیم ، دیگر به این متادیتا ، دسترسی نخواهیم داشت.
 
 مکانیزم کار validation pipe ها به این صورته که یه white list با نگاه به dto class ها درست میکنن در مثال پایین white list شامل `name` و `age` و `breed` خواهد بود و هر property ای به جز این سه اگر از request ارسال شود ، آن property نادیده گرفته می شود.

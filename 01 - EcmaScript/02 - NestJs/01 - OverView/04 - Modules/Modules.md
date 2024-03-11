@@ -32,6 +32,12 @@
 >[!tip]
 >پس نتیجه می شود که یک provider یا باید در imports های یک module باشد و یا در providers ها ؛ در غیر این صورت nest توانایی تامین این provider ها رو نخواهد داشت.
 
+برای ایجاد یه module به کمک Nest CLI:
+
+```bash
+nest generate | g module [name]
+```
+
 ## **Feature modules————————-**
 
 از آنجایی که catsController و catsService ارتباط نزدیکی با هم دارند و به نوعی از یک دامنه هستند ، بهتره آنها را به یک `feature module`  انتقال بدیم feature module ها اون دسته از feature (قابلیت) هایی که مرتبط با هم اند رو سازماندهی میکنه ، بخاطر همینه که اسمش **feature** module هست.
