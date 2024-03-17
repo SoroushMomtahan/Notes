@@ -2,7 +2,7 @@
 
 این @Module() ابرداده (meta data) هایی به class Module اضافه می کند و با این کار قابلیت های کلاس module رو افزایش می دهد و همچنین به nest میفهمونه که این کلاس یک module هست.
 
-![](Pasted%20image%2020240228201324.png)
+![](./Images/Pasted%20image%2020240228201324.png)
 
 هر برنامه دست کم یک ماژول رو داره و اونم ماژول ریشه (`root module`) هست.
 
@@ -74,7 +74,7 @@ import { CatsModule } from './cats/cats.module';
 export class AppModule {}
 ```
 
-![](Pasted%20image%2020240228195149.png)
+![](./Images/Pasted%20image%2020240228195149.png)
 
 ## **Shared modules—————————-**
 
@@ -84,7 +84,7 @@ export class AppModule {}
 
 به بیان دیگر تنها یک نمونه از ماژول مربوطه در کل پروژه **Shared** می شود ، به همین خاطره که میگوییم ماژول ها در nest بصورت پیش فرض shared Module اند که البته می تونیم این ویژگی ماژول ها رو تغییر بدیم.
 
-![](Pasted%20image%2020240228195302.png)
+![](./Images/Pasted%20image%2020240228195302.png)
 
 >[!tip]
 > مثلا در تصویر بالا تنها یک نمونه از provider های shared module ای فرضی در اختیار دیگر module ها قرار گرفته است.

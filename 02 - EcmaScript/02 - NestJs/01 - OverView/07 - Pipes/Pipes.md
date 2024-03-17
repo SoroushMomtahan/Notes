@@ -1,11 +1,29 @@
+>[!tip]
+>**کلمات کلیدی این بخش:**
+>`@Injectable()`
+>
+>`PipeTransform`
+>
+>`transform()`
+>
+>`ArgumentMetaData`
+>
+>`@UsePipes()`
+>
+>`useGlobalPipes()`
+>
+>`APP_PIPE`
+
+---
+
 بطور کلی Pipe ها کلاس هایی هستند که اینترفیس `PipeTransform` رو پیاده سازی کردند و بالاشون از دکوراتور `@Injectable` استفاده شده است.
 
-![](Pasted%20image%2020240302175353.png)
+![](./Images/Pasted%20image%2020240302175353.png)
 
 این Pipe ها دو جا کاربرد دارند:
 
 - برای تبدیل داده (**`Transformation`**) : تبدیل داده ی ورودی به نوع دلخواه (به عنوان مثال تبدیل number به String)
-- اعتبارسنجی (**`Validation`**) : ارزیابی داده ورودی به این صورت که اگر داده valid بود داده عبور داده شود و در غیر اینصورت throw شود یه exception
+- اعتبارسنجی (**`Validation`**) : ارزیابی داده ورودی به این صورت که اگر داده valid بود داده عبور داده شود (یعنی داده به پارامتر ورودی route controller مربوطه داده شود) و در غیر اینصورت یه exception پرتاب بشه
 
 این pipe ها روی پارامتر های ورودی controller ها کار می کنند.
 
@@ -20,7 +38,7 @@
  
 ## Built-in Pipes-------------
 
-این nest دارای 9 تا pipe بصورت داخلی می باشد :
+فریمورک nest دارای 9 تا pipe بصورت داخلی می باشد :
 
 - `ValidationPipe`
 - `ParseIntPipe`
@@ -33,9 +51,9 @@
 - `ParseFilePipe`
 
 اکنون می خواهیم مثالی از `ParseIntPipe` بزنیم ، لازم به ذکره که pipe هایی که با Parse شروع می شوند همگی پیاده سازی یکسانی دارند.
-## Binding Pipes--------------
+## Binding Transformation Pipes--------------
 
-روش پایین رو اتصال pipe به متد گویند:
+از روش پایین ، برای اتصال transformation pipe به استفاده می کنند:
 
 ```typescript
 @Get(':id')
@@ -46,8 +64,8 @@ async findOne(@Param('id', ParseIntPipe) id: number) {
 
 حال دو حالت پیش میاد : 
 
-- یا number و یا string ای که تنها شامل عدد هست به عنوان پارامتر ورودی دریافت میشه که این باعث میشه درخواست از لوله به سلامت عبور کنه و controller مربوطه invoke بشه 
-- حالت دوم اینکه که به هر دلیلی درخواست نتونه از خط لوله به سلامت عبور کنه و وسط راه به مشکل بخوره ، که در این صورت pipe یک exception رو throw می کنه
+- حالت اول اینه که ، مقداری پاس داده می شود که قابل تبدیل شدن به type integer هست ؛ که در این صورت درخواست از لوله به سلامت عبور میکنه و controller مربوطه invoke میشه.
+- حالت دوم اینه که ، به هر دلیلی درخواست نتونه از خط لوله به سلامت عبور کنه و وسط راه به مشکل بخوره ، که در این صورت pipe یک exception رو throw می کنه ، پایین مثالی در همین باره داریم
 
 مثلا فرض کنید ، عبارت بالا به عنوان id داده میشه :
 
@@ -65,7 +83,7 @@ GET localhost:3000/abc
 }
 ```
 
-در مثال بالا خود کلاس `ParseIntPipe` رو به پارامتر دوم دکوراتور پاس دادیم تا وظیفه نمونه سازی و مدیریت طول عمر نمونه رو بر عهده nest بذاریم
+در مثال بالا خود کلاس `ParseIntPipe` رو به پارامتر دوم دکوراتور پاس دادیم تا وظیفه نمونه سازی و مدیریت طول عمر نمونه رو بر عهده nest بذاریم.
 البته که میشه یک نمونه هم پاس داد ، اما باید به این نکته توجه کرد که زمانی بهتر است نمونه پاس بدیم که می خواهیم رفتار pipe مربوطه رو با دادن option هایی تغییر دهیم :
 
 ```typescript
@@ -91,6 +109,8 @@ async findOne(@Query('id', ParseIntPipe) id: number) {
 
 یا به عنوان مثال در مثال پایین چک کردیم که پارامتر ورودی `uuid` هست یا نه :
 
+#تکمیل_شود 
+
 ```typescript
 @Get(':uuid')
 async findOne(@Param('uuid', new ParseUUIDPipe()) uuid: string) {
@@ -99,7 +119,7 @@ async findOne(@Param('uuid', new ParseUUIDPipe()) uuid: string) {
 ```
 
 >[!tip]
->وقتی از uuid استفاده می کنیم بصورت خودکار uuid به ورژن 3 , 4 و یا 5 تجزیه می شود ؛ برای اینکه بخواهیم مشخص کنیم uuid به ورزن خاصی parse شود شماره ورژن رو هنگام ساخت نمونه ، به عنوان option پاس می دهیم.
+>وقتی از uuid استفاده می کنیم بصورت خودکار uuid به ورژن 3 , 4 و یا 5 تجزیه می شود ؛ برای اینکه بخواهیم مشخص کنیم uuid به ورژن خاصی parse شود شماره ورژن رو هنگام ساخت نمونه ، به عنوان option پاس می دهیم.
 
 باید به این نکته توجه کرد که اتصال (Binding) لوله های اعتبارسنجی (Validation Pipe) کمی متفاوت از اتصال لوله های خانواده Parse* هستند.
 
@@ -144,6 +164,8 @@ export interface ArgumentMetadata {
 
 این property ها **آرگومان های پردازش فعلی** رو توصیف می کنند.
 
+#تکمیل_شود 
+
 |   |   |
 |---|---|
 |`type`|Indicates whether the argument is a body `@Body()`, query `@Query()`, param `@Param()`, or a custom parameter (read more [here](https://docs.nestjs.com/custom-decorators)).|
@@ -172,15 +194,15 @@ export class CreateCatDto {
 }
 ```
 
-می خواهیم مطمئن شویم که body دریافت شده از request معتبر است ؛ حال body از نوع CreateCatDto هست ، بنابراین باید هر یک از property های آن را از نظر معتبربودن یا نبودن بررسی کنیم.
+می خواهیم مطمئن شویم که body دریافت شده از request معتبر است ؛
 
 ما می تونیم این کار رو در routeHandler مربوطه یعنی در بدنه متد create انجام دهیم ، اما انجام این کار اصل تک مسئولیتی (single responsibility principle) رو نقض میکنه.
 
-راهکار دیگه ایجاد یک کلاس اعتبارسنجی (validator class) و واگذاری وظیفه اعتبارسنجی به اون کلاسه ؛ که این روش هم مشکلاتی داره از جمله اینکه باید همیشه یادمون باشه که نمونه ای کلاس اعتبارسنجی رو در ابتدا خط هر متدی صدا بزنیم.
+راهکار دیگه ، ایجاد یک کلاس اعتبارسنجی (validator class) و واگذاری وظیفه اعتبارسنجی به اون کلاسه ؛ که این روش هم مشکلاتی داره از جمله اینکه باید همیشه یادمون باشه که نمونه ای کلاس اعتبارسنجی رو در ابتدا خط هر متدی صدا بزنیم.
 
-چطوره از یک middleware عمومی ها استفاده کنیم ؟ middleware ها به دلیل اینکه از controller ای که می خواد بعدش اجرا بشه و همچنین پارامتر های ورودی این controller اطلاعی ندارن ، راهکار خوبی نیستند.
+چطوره از یک middleware عمومی استفاده کنیم ؟ middleware ها به دلیل اینکه از controller ای که می خواد بعدش اجرا بشه و همچنین پارامتر های ورودی این controller اطلاعی ندارن ، راهکار خوبی نیستند.
 
-بهترین راه حل استفاده از validation Pipe هست.
+بهترین راه حل ، استفاده از validation Pipe هست.
 ## Object schema validation--------------
 
 پس بستری که قراره اعتبارسنجی رو درش انجام بدیم (Validation Pipe) مشخص شد. 
@@ -197,6 +219,7 @@ npm install --save zod
 import { PipeTransform, ArgumentMetadata, BadRequestException } from '@nestjs/common';
 import { ZodSchema  } from 'zod';
 
+@Injectable()
 export class ZodValidationPipe implements PipeTransform {
   constructor(private schema: ZodSchema) {}
 
@@ -211,7 +234,7 @@ export class ZodValidationPipe implements PipeTransform {
 }
 ```
 
-یک کلاس درست کردیم و مشخص کردیم که این کلاس به یک schema از جنس ZodSchema نیازمند هست (یه وابستگی تعریف کردیم که می بایست در constructor تزریق شود)
+یک کلاس درست کردیم و با استفاده از دکوراتور `@Injectable()` مشخص کردیم که این کلاس یک کلاس تزریقی هست چون در واقع این کلاسه که داده رو به امضای متد مربوطه میده و همچنین چون این کلاس قراره نقش pipe رو بازی کنه ، نیاز به پیاده سازی قرارداد های `PipeTransform`  داره . درون این کلاس برای پیاده سازی منطق اعتبارسنجی به یک schema از  جنس ZodSchema نیازمند هستیم (یه وابستگی تعریف کردیم که می بایست در constructor تزریق شود)
 ## Binding validation pipes---------------
 
 حالا میایم ZodValidationPipe رو به وسیله دکوراتور `@UserPipe()` به routeHandler مربوطه متصل می کنیم.
@@ -250,7 +273,7 @@ export class CreateCatDto {
 ```
 
 >[!warning]
- >کتابخونه zod برای کار کردن نیاز به فعال کردن فلگ `strictNullChecks`در tsconfig.json دارد.
+ >کتابخونه zod برای کار کردن ، نیاز به فعال کردن فلگ `strictNullChecks`در tsconfig.json دارد.
  
 ## Class validator---------------
 
@@ -261,7 +284,7 @@ export class CreateCatDto {
 npm i --save class-validator class-transformer
 ```
 
-در این روش بعد از نصب پکیج های مربوطه ، تنها کافیست چندین دکوراتور به کلاس `CreateCatDto` اضافه کنیم ، یعنی نیازی به ایجاد کلاسی جدا نداریم:
+در این روش بعد از نصب پکیج های مربوطه ، تنها کافیست چندین دکوراتور به کلاس `CreateCatDto` اضافه کنیم ، یعنی نیازی به ایجاد فایلی جدا برای ایجاد عملیات validation مثل ساخت createCatSchema که بالا ساختیم ، نداریم:
 
 `create-cat.dto.ts`
 ```typescript
@@ -312,9 +335,9 @@ export class ValidationPipe implements PipeTransform<any> {
 
 یادتونه که پکیج `class-transformer` رو ابتدا نصب کردیم ، این کلاس توسط سازنده خود `class-validator` توسعه داده شده و به همین منظور هماهنگی خوبی با پکیج class-validator داره 
 
-حالا دلیل ستفاده از این پکیج اینه که هنگامی که مقداری از request به route handler مربوطه ارسال میشه ، نوع این value مشخص نیست پس باید ابتدا یه برچسبی به این داده ارسالی بزنیم تا مشخص شود نوعش چیه تا بشه اون نوعی که میگیره رو با دکوراتور هایی که رو سر property های dto-class مربوطه می گذاریم مقایسه کرد.
+حالا دلیل استفاده از این پکیج اینه که هنگامی که مقداری از request به route handler مربوطه ارسال میشه ، نوع این value مشخص نیست پس باید ابتدا یه برچسبی به این داده ارسالی بزنیم تا مشخص شود نوعش چیه تا بشه اون نوعی که میگیره رو با دکوراتور هایی که رو سر property های dto-class مربوطه می گذاریم مقایسه کرد.
 
-پس ، از متد `palinToInstance` از پکیج `class-transformer` استفاده کردیم ، این متد در پارامتر اولش نوعی که value باید داشته باشه رو میگیره و در پارامتر دوم خود value رو میگیره و به این صورت Value رو بر اساس پارامتر اول برجسب گذاری میکنه و نتیجه رو یک همان value اما با برچسب گذاری شده هست رو Return میکنه ، در گام بعد می تونیم این value رو برای ارزیابی معتبر بودن یا نبودن به متد `validate` بدیم.
+پس ، از متد `palinToInstance` از پکیج `class-transformer` استفاده کردیم ، این متد در پارامتر اولش نوعی که value باید داشته باشه رو میگیره و در پارامتر دوم خود value رو میگیره و به این صورت Value رو بر اساس پارامتر اول برچسب گذاری میکنه و نتیجه رو که همان value ، اما با برچسب هست رو Return میکنه ، در گام بعد می تونیم این value رو برای ارزیابی معتبر بودن یا نبودن به متد `validate` بدیم.
 
 >[!tip]
 >البته خود `ValidationPipe` داخلی nest به خوبی از پس همه چی بر میاد و نیاز به نوشتن موارد بالا نبود.
@@ -322,6 +345,11 @@ export class ValidationPipe implements PipeTransform<any> {
 ----
 
 در پایین هم pipe ای که نوشتیم رو متصل کردیم ، لازم به ذکر هست که این اتصال میتونه` global-scoped` یا `controller-scoped` یا `method-scoped` و یا مانند مثال پایین `parameter-scoped` باشه:
+
+>[!tip]
+>دقت کنید که تنها pipe ها هستند که می تونن `paramter-scoped` هم باشند ؛
+>به بیان دیگر exception-filter ها ، pipe ها ، guard ها و interceptor ها `scope` هایی که می تونن داشته باشند مثل همه (یعنی همشون می تونن ` global-scoped` یا `controller-scoped` یا `method-scoped` باشند ) اما تنها pipe ها هستند که می تونن `paramter-scoped` هم باشند.
+
 
 `cats.controller.ts`
 ```typescript
@@ -335,7 +363,7 @@ async create(
 
 درباره دو بخش بالا در بخش مربوطه به طور مفصل توضیح داده خواهد شد....
 
-## Global scoped pipes----------------
+## Global scoped Validation pipes----------------
 
 `main.ts`
 ```typescript
@@ -346,6 +374,8 @@ async function bootstrap() {
 }
 bootstrap();
 ```
+
+#تکمیل_شود 
 
 >[!warning]
 >از متد `useGlobalPipes()` در برنامه های هیبریدی `hybrid apps` که gateway , microservice ارائه میدهند ، نمی توان استفاده کرد. 
@@ -372,6 +402,19 @@ export class AppModule {}
 
 با اینکار فارغ از اینکه این pipe در کدام ماژول تعریف شده ، در سراسر پروژه مورد استفاده قرار میگیرد و روی هر کنترل و route handler ای اعمال می شود.
 
+## Controller scoped Validation pipes----------------
+
+برای استفاده از validation Pipe ها رو سر route handler ها از دکوراتور `@UsePipes()` استفاده می کنیم:
+
+`cats.controller.ts`
+```ts
+@Get(':id')
+@UsePipes(new ValidationPipe())
+async findOne() {
+  
+}
+```
+
 ## The built-in validationPipe-------------
 
 در بخش تکنیک و قسمت validation در این باره صحبت میشه.
@@ -379,7 +422,7 @@ export class AppModule {}
 
 در این قسمت گفته شده که می توان عملکرد داخلی transformation pipe ها رو شخصی سازی کرد.
 
-بطور کلی از transformation pipe ها استفاده می کنیم چون شاید بخواهیم داده ارسالی از سمت client رو قبل رسیدن به دست route handler مربوطه تغییر بدیم مثلا به داده های ارسال نشده مقدار پیش فرض بدیم و یا داده string ای ارسال شده رو به integer تبدیل کنیم:
+بطور کلی از transformation pipe ها استفاده می کنیم چون شاید بخواهیم داده ارسالی از سمت client رو قبل از رسیدن به دست route handler مربوطه تغییر بدیم مثلا به داده های ارسال نشده مقدار پیش فرض بدیم و یا داده string ای ارسال شده رو به integer تبدیل کنیم:
 
 `parse-int.pipe.ts`
 ```typescript
@@ -428,6 +471,19 @@ async findAll(
   @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
 ) {
   return this.catsService.findAll({ activeOnly, page });
+}
+```
+
+## Set `Transform: true`--------------
+داده هایی که از دکوراتور `@Param()` و یا `@Query` به امضای متد تزریق می شوند ، همگی از جنس `string` اند و داده هایی که از دکوراتور `Body()` دریافت می شوند ، همگی از جنس object js ای هستند.
+پس اگر حتی نوع پارامتر ورودی متدی که پشت آنها این دکوراتور ها هست رو هم مشخص کرده باشیم باز هم مقدار پیش فرض آنها تزریق می شود. برای رفع این موضوع می توان زمانی که از validator ها استفاده می کنیم ، به validtor بگوییم که به نوع پارامتر ورودی متد توجه کن و داده دریافتی از client رو به نوع مد نظر متد تبدیل کن ، این کار با استفاده از تنظیم property ی `transform: true` برای validator امکان پذیر می شود. در ادامه و در بخش techniques و قسمت validation در این باره صحبت می شود.
+
+`cats.controller.ts`
+```ts
+@Get(':id')
+@UsePipes(new ValidationPipe({transform: true}))
+async findOne() {
+  
 }
 ```
 

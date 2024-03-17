@@ -1,6 +1,27 @@
+>[!tip]
+>**کلمات کلیدی این بخش:**
+>`@Catch()`
+>
+>`ExceptionFilter`
+>
+>`catch()`
+>
+>`ArgumentHost`
+>
+>`HttpException`
+>
+>`@UseFilters()`
+>
+>`useGlobalFilters()`
+>
+>`APP_FILTER`
+>
+
+---
+
 بطور کلی nest لایه ای بصورت داخلی برای مدیریت خطا (Built-in Exception Layer) داره که مسئولیت مدیریت کردن خطا های handler نشده و خطا های از نوع کلاس `HttpException` در برنامه رو بر عهده داره.
 
-![](Pasted%20image%2020240228202035.png)
+![](./Images/Pasted%20image%2020240228202035.png)
 
 همانطور که گفتیم این لایه (**global exception filter**) علاوه بر مدیریت کردن خطا های handler نشده ، خطا هایی رو که از نوع کلاس `HtppException` و یا زیر کلاس های آن هستند رو نیز handler میکنه.
 
@@ -144,7 +165,7 @@ export class MyException extends  HttpException{
 - `PreconditionFailedException`
 
 مثلا `BadRequestException` چون statusCode ش از قبل مشخص شده دیگه پارامتر statusCode نداره 
-پارمتر سوم هم optional هست که یه object هست که می تونه دو ویژگی `cause` و `description` رو بگیره: 
+پارامتر سوم هم optional هست که یه object هست که می تونه دو ویژگی `cause` و `description` رو بگیره: 
 
 ```typescript
 throw new BadRequestException('Something bad happened', { cause: new Error(), description: 'Some error description' })
@@ -163,7 +184,7 @@ throw new BadRequestException('Something bad happened', { cause: new Error(), de
 >[!tip]
 >لازم به ذکره که این پارمتر سوم در کلاس پایه HttpEception نیز وجود داره.
 
-## Exception filters----------------
+## Custom Exception filters----------------
 
 خود exception filter بطور خودکار هر error ای رو مدیریت میکنه ، با این حال می تونیم exception filter layer سفارشی خودمون رو بنویسیم.
 
@@ -175,7 +196,7 @@ throw new BadRequestException('Something bad happened', { cause: new Error(), de
 
 بیایم یه exception filter بسازیم که مسئول catch کردن exception هایی که نمونه ای از کلاس HttpException اند ، می باشد.
 
-این exception filter یه کلاسه که اینترفیس `ExceptionFilter` رو پیاده سازی کرده و بالاش از دکوراتور `@Catch()` استفاده شده (این دکوراتور مشخص می کند که exception filter ساخته شده برای چه نوع خطا هایی باشد)
+این exception filter یه کلاسه که اینترفیس `ExceptionFilter` رو پیاده سازی کرده و بالاش از دکوراتور `@Catch()` استفاده شده (این دکوراتور رفتار کلاس زیرش رو گسترش میده و همچنین به سیستم nest میفهمونه که این کلاس قراره نقش یه exception filter رو بازی کنه ، این دکوراتور در پارامتر های ورودی ای که میگیره مشخص میکنه که این فیلتر برای چه نوع خطا هایی باشه)
 
 `http-exception.filter.ts`
 ```typescript
@@ -212,6 +233,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
 این دکوراتور می تونه یه پارامتر یا چندین پارامتر ورودی بگیره ، که چندین پارامتر به شما اجازه میده تعیین کنید این filter برای چه کلاس هایی از Exception باشد.
 
+>[!tip]
+>شاید تنها بخواهیم به رفتار exception filter داخلی خود nest چیزی اضافه کنیم و نخواهیم یه exception filter رو از صفر پیاده سازی کنیم ، در آخر همین بخش در همین رابطه توضیح داده شده.
+
 ## Arguments host------------
 
 منبع دو شی request و response بالا مربوط به route handler ای هست که exception داده است.
@@ -223,8 +247,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
 اتصال فیلتری که ساختیم 
 
-حالا میایم فیلتری که ساختیم رو به متد یا متد های کنترلی (router handler) که می خوایم از این فیلتر استفاده کنند ، می دهیم  
-پس دکوراتور `@UseFilters` رو بالای متد یا controlle مورد نظر اضافه می کنیم:
+حالا میایم فیلتری که ساختیم رو به متد یا متد های کنترلی (router handler) که می خوایم از این فیلتر استفاده کنند ، می دهیم.
+برای این منظور دکوراتور `@UseFilters` رو بالای متد یا controlle مورد نظر اضافه می کنیم ، با این کار مشخص می کنیم که متد مورد نظر اگر به خطا خورد این فیلتر قراره خطا شو دریافت کنه response مناسب بفرسته:
 
 `cats.controller.ts`
 ```typescript
@@ -278,6 +302,8 @@ async function bootstrap() {
 bootstrap();
 ```
 
+#تکمیل_شود 
+
 >[!warning]
 >متد `useGlobalFilters()` فیلتری بر روی gateway و hybrid-application ها ایجاد نمیکنه.
 
@@ -314,6 +340,8 @@ export class AppModule {}
 
 اگر بخوایم همه error ها ، صرف نظر از اینکه از چه نوعی هستند رو بگیریم ، به دکوراتور `@Catch()` پارامتر ورودی نمی دیم.
 
+#تکمیل_شود 
+
 ادامه بخش رو مثالی از Adapter زده که بعدا (وقتی Adapeter رو فهمیدیم ) کامل میشه
 
 ادامه دارد.....
@@ -323,7 +351,7 @@ export class AppModule {}
 
 ## Inheritance------------------
 
-همانطور که دیدید در بالا custom exception اختصاصی خودمون رو ساختیم ، 
+همانطور که دیدید در بالا custom exception filter اختصاصی خودمون رو ساختیم ، 
 اما ممکنه بخواهیم از exception filter داخلی nest بهمراه شخصی سازی هایی استفاده کنیم 
 در این حالت از کلاس `BaseExceptionFilter` ارث بری می کنیم:
 

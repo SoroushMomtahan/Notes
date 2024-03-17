@@ -1,3 +1,21 @@
+>[!tip]
+>**کلمات کلیدی این بخش:**
+>`@Injectable()`
+>
+>`NestInterceptor`
+>
+>`intercept()`
+>
+>`CallHandler`
+>
+>`@UseInterceptors()`
+>
+>`useGlobalInterceptors()`
+>
+>`APP_INTERCEPTOR`
+
+---
+
 این Interceptor یه کلاس هست که که بالاش دکوراتور `@Injectable()` وجود داره و اینترفیس `NestInterceptor` رو پیاده سازی کرده.
 
 ![](Pasted%20image%2020240305181051.png)
@@ -10,13 +28,13 @@
 - تبدیل exception پرتاب شده از متد
 - بسط (گسترش) دادن رفتار متد
 - بسته به شرایط خاص یک متد رو به طور کامل لغو کنید (برای اهداف cache)
-## Basics
+## Basics-----------------
 
 هر interceptor باید متد `intercept()` رو پیاده سازی کنه. این متد دو تا آرگومان ورودی داره که آرگومان اول نمونه ای از کلاس `ExecutionContext` هست که این کلاس از `ArgumentHost` ارث بری کرده و چند تا helper function به متد های کلاس اصلی یعنی ArgumentHost اضافه کرده.
-## Execution Context
+## Execution Context-----------------
 
 همانطور که بالا هم گفتیم ، `ExecutionContext` از `ArgumentHost` ارث بری کرده و چندین helper function اضافه کرده که باعث میشه بتونیم interceptor های عمومی رو که بتونه طیف گسترده ای از controller ها و متد ها رو ساپورت کنه بسازیم.
-## Call Handler
+## Call Handler-----------------
 
 پارامتر دوم متد `intercept()` نمونه ای از `CallHandler` است که دارای متدی به اسم `handler()` هست.
 با استفاده از این متد می تونیم route handler مربوطه رو در نقطه ای که می خواهیم صدا بزنیم.
@@ -25,9 +43,9 @@
 
 رویکرد interceptor به این صورته که جریان request / response و بطور کلی route handler مربوطه رو دور خودش می پیچه ، بنابراین شما می تونین قبل و بعد از route handler مربوطه یه سری logic رو اضافه کنید.
 
-در واقع نتیجه route handler مربوطه توسط متد handler() دریافت میشه و با استفاده از عملگر های قدرمتد [RxJs ](https://github.com/ReactiveX/rxjs)می تونیم دستکاری بیشتری روی پاسخ ای که route handler مربوطه برگردونده انجام بدیم.
+در واقع نتیجه route handler مربوطه توسط متد handler() دریافت میشه و با استفاده از عملگر های قدرتمند [RxJs ](https://github.com/ReactiveX/rxjs)می تونیم دستکاری بیشتری روی پاسخ ای که route handler مربوطه برگردونده انجام بدیم.
 
-## Aspect Interception
+## Aspect Interception-----------------
 
 مثلا فرض کنید می خواهیم از تعامل کاربر با یک route handler بیایم و بوسیله interceptor ها log بگیریم:
 
@@ -52,13 +70,13 @@ export class LoggingInterceptor implements NestInterceptor {
 }
 ```
 
-در اینترفیس `NestInterceptor<T, R>` این T نشان دهنده تایپ خروجی کنترل مربوطه (جروجی متد handler()) `Observable<T>` و R نشان دهنده تایپ خروجی intereceptor هست.
+در اینترفیس `NestInterceptor<T, R>` این T نشان دهنده تایپ خروجی کنترل مربوطه (خروجی متد handler()) `Observable<T>` و R نشان دهنده تایپ خروجی intereceptor هست.
 
 بدلیل اینکه خروجی متد handler() یک observable هست ، ما عملگر های گسترده ای برای دستکاری این جریان داریم.
 
 در مثال بالا از عملگر `tap()` استفاده کردیم که یک تابع logging رو بعد از invoke شدن route handler ما اجرا میکنه ؛ این عملگر در فرآیند request / response تداخلی ایجاد نمیکنه.
 
-## Binding Interceptors
+## Binding Interceptors-----------------
 
 برای اتصال interceptor ای که نوشتیم به route handler مربوطه از دکوراتور `@UseInterceptors()` استفاده می کنیم
 
@@ -92,7 +110,7 @@ const app = await NestFactory.create(AppModule);
 app.useGlobalInterceptors(new LoggingInterceptor());
 ```
 
-باید به این نکته توجه کرد که در متد `useGlobalInterceptors` نمی تونیم از تزریق استفاده کنیم و برای اینکار باید interceptor در مازول تعریف بشه:
+باید به این نکته توجه کرد که در متد `useGlobalInterceptors` نمی تونیم از تزریق استفاده کنیم و برای اینکار باید interceptor در ماژول تعریف بشه:
 
 `app.module.ts`
 ```typescript
@@ -110,7 +128,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 export class AppModule {}
 ```
 
-## Response Mapping
+## Response Mapping-----------------
 
 دستکاری response ارسال شده از route handler به متد handler()
 
@@ -163,7 +181,7 @@ export class ExcludeNullInterceptor implements NestInterceptor {
 }
 ```
 
-## Exception Mapping
+## Exception Mapping-----------------
 
 یکی دیگه از کار هایی که میشه با interceptor ها انجام داد ، گرفتن خطای احتمالی route handler ها و نمایش خطا یا هر چیزی که می خواهیم هست:
 
@@ -191,9 +209,9 @@ export class ErrorsInterceptor implements NestInterceptor {
 }
 ```
 
-## Stream Overriding
+## Stream Overriding-----------------
 
-به دلایل بسیاری ممکنه بخوایم بطور کامل از route handler جلوگیری کنیم و value خودمون رو بفرستیم یکی از موارد اینه که مثلا می خواهیم برای بالا رفتن سرعت بجای ارسال response بیام cache موجود رو بفرستیم
+به دلایل بسیاری ممکنه بخوایم بطور کامل از route handler جلوگیری کنیم و value خودمون رو بفرستیم یکی از موارد اینه که مثلا می خواهیم برای بالا رفتن سرعت ، بجای ارسال response بیایم cache موجود رو بفرستیم:
 
 `cache.interceptor.ts`
 ```typescript
@@ -215,9 +233,9 @@ export class CacheInterceptor implements NestInterceptor {
 ما اینجا منطق اینکه cache وجود دارد یا نه رو پیاده نکردیم و به یه `isCached = true` بسنده کردیم.
 
 عملگر `of()` از Rxjs باعث می شود یک جریان (stream) جدید ایجاد بشه.
-## More Operators
+## More Operators-----------------
 
-دستکاری stream با استفاده از عملگر های Rxjs توانایی های زیادی به داده.
+دستکاری stream با استفاده از عملگر های Rxjs توانایی های زیادی به ما داده.
 مثلا فرض کنید می خواهیم برای یک route handler یه timeout تنظیم کنیم یعنی در صورتی که route handler نتونست بعد از مدتی response بفرسته ، یه exception پرتاب شود:
 
 `timeout.interceptor.ts`

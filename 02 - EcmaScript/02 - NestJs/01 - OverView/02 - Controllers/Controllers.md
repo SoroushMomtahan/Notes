@@ -1,6 +1,6 @@
 بطور کلی controller ها وظیفه مدیریت درخواست (request) به کمک router handler ها (متد های درون کلاس کنترل) رو دارند.
 
-![](Pasted%20image%2020240228182302.png)
+![](./Images/Pasted%20image%2020240228182302.png)
 
 در nest مکانیسم **routing** با **controller** عجین شده ، یعنی نیاز به ایجاد فایلی جدا برای ایجاد route ها ، مانند کاری که در فریمورک express می کردیم ، نداریم.
 در واقع در nest ، سیستم routing بوسیله دکوراتور ها مدیریت می شود.
@@ -271,7 +271,7 @@ findAll(@Query() paginationQuery){
   }
 ```
 
-![](Pasted%20image%2020240306130859.png)
+![](./Images/Pasted%20image%2020240306130859.png)
  
  اگه تایپ param رو any بزاریم می تونیم به `param.id` دسترسی داشته باشیم.
 

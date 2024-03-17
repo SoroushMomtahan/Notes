@@ -1,3 +1,21 @@
+>[!tip]
+>**کلمات کلیدی این بخش:**
+>`@Injectable()`
+>
+>`CanActive`
+>
+>`canActive()`
+>
+>`ExecutionContext`
+>
+>`@UseGuards()`
+>
+>`useGlobalGuards()`
+>
+>`APP_GUARD`
+
+---
+
 کلاس هایی که اینترفیس `CanActive` رو پیاده سازی کردند و بالاشون از دکوراتور `@Injectable()` استفاده شده است.
 
 ![](Pasted%20image%2020240302201632.png)
@@ -23,7 +41,7 @@
 >[!tip]
 >این Guard ها بعد از همه middleware ها و قبل از interceptor ها و pipe ها اجرا می شوند.
 
-## Authorization Guard
+## Authorization Guard-----------------
 
 همانطور که گفته شد Authorization بسیار مورد استفاده ی Guard هاست چون مشخص می کنند که یک route handler باید در اختیار کاربری که احراز هویت شده قرار گیرد یا نه 
 
@@ -49,13 +67,13 @@ export class AuthGuard implements CanActivate {
 
 همه Guard ها باید متد `canActive()` رو پیاده سازی کنند ، این متد یه boolean برمیگردونه که مشخص میکنه کاربر یا request زده شده به router handler مربوطه دسترسی داشته باشه (true) یا دسترسی نداشته باشه (false)
 
-## Excecution context
+## Excecution context-----------------
 
-متد `catActive()` تنها یه پارامتر آرگومان ورودی میگیره و اونم نمونه ای از کلاس `ExecutionContext` هست. کلاس `ExecutionContext` از `ArgumentsHost` ارث بری کرده ، توی قسمت exception filter درباره `ArgumentsHost` خوندیم.
+متد `canActive()` تنها یه پارامتر آرگومان ورودی میگیره و اونم نمونه ای از کلاس `ExecutionContext` هست. کلاس `ExecutionContext` از `ArgumentsHost` ارث بری کرده ، توی قسمت exception filter درباره `ArgumentsHost` خوندیم.
 
 حالا کلاس `ExecutionContext` اومده در کنار متد هایی که `ArgumentHost` داشته یه سری helper method اضافه کرده که جزئیات بیشتری درباره پروسه در حال اجرا که شامل request , ... هست به ما میده ، این `ExecutionContext` کمک میکنه تا بتونیم guard های عمومی تری بنویسیم که روی مجموعه ای از controller ها کار میکنه 
 
-## Role-based authentication
+## Role-based authentication-----------------
 
 در این قسمت می خواهیم guard ای رو بسازیم که بر اساس نقش به کاربران مجوز دسترسی میده
 
@@ -76,7 +94,7 @@ export class RolesGuard implements CanActivate {
 }
 ```
 
-## Binding Guards
+## Binding Guards-----------------
 
 همانند exception filter ها و pipe ها یک guard میتونه **controller-scoped**, method-scoped, or global-scoped باشه.
 
@@ -110,7 +128,7 @@ app.useGlobalGuards(new RolesGuard());
 >[!warning]
  >توی برنامه های هیبریدی نمی تونیم از متد `useGlobalGuards()` استفاده کنیم.
  
- این Global Gaurd هایی که ببیرون از module تعریف می شوند (با استفاده از `useGlobalGaurds()`) نمی تونن وابستگی بهشون تزریق بشه و باید حتما نمونه بهشون پاس داده بشه
+ این Global Gaurd هایی که بیرون از module تعریف می شوند (با استفاده از `useGlobalGaurds()`) نمی تونن وابستگی بهشون تزریق بشه و باید حتما نمونه بهشون پاس داده بشه
 
 برای حل این مشکل می تونیم global gaurd ها رو در یک ماژول تعریف کنیم ، در این حالت فارغ از اینکه این guard در کدام ماژول تعریف شده باشد guard مربوطه Global است و روی همه ماژول ها اعمال می شود.
 
@@ -130,7 +148,7 @@ import { APP_GUARD } from '@nestjs/core';
 export class AppModule {}
 ```
 
-## Setting roles per handler
+## Setting roles per handler-----------------
 
 تعیین نقش برای هر کنترل کننده
 
@@ -159,7 +177,7 @@ async create(@Body() createCatDto: CreateCatDto) {
 ```
 
 
-## Putting it all together
+## Putting it all together-----------------
 
 خب الان یه route handler ای داریم که یه metadata رو بهش وصل کردیم و تو این metadata ، نقش هایی که مورد نیاز route handler فعلی هست رو بهش دادیم و الان می خوایم ورود هر user به این route handler رو مشروط به نتیجه مقایسه نقش های این route handler با نقش هایی که کاربر دارد کنیم.
 
@@ -187,13 +205,13 @@ export class RolesGuard implements CanActivate {
 }
 ```
 
-پارامتر اول متد `get` اون متادیتایی که می خواد بگیره رو مشخص کرده و در پارامتر دومش اینکه از کدام handler این متادیتا گرفته بشه ، مشخص شده.
+در پارامتر اول متد `get` ،  اون متادیتایی که می خواد بگیره رو مشخص کرده و در پارامتر دومش اینکه از کدام handler این متادیتا گرفته بشه ، مشخص شده.
 
 متد `matchRoles` هم منطق ما برای مقایسه نقش های کاربر درخواست زده با نقش های مورد نیاز handler مربوطه هست.
 
 این request.user هم قبلا در بخش احراز هویت به request متصل شده.
 
-وقتی کاربر با امتیازات ناکافی درخواستی رو به یک endpoint می زند. مسلما gaurd یک false رو return میکنه و nest بصورت اتوماتیک respone زیر رو میفرسته:
+وقتی کاربر با امتیازات ناکافی درخواستی رو به یک endpoint می زند ، مسلما gaurd یک false رو return میکنه و nest بصورت اتوماتیک respone زیر رو میفرسته:
 
 ```typescript
 {
