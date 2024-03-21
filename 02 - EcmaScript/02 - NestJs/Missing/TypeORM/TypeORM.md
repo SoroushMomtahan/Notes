@@ -1,42 +1,6 @@
-در rootModule اقدام به برقراری ارتباط با ماژول مورد نظرمون می کنیم:
-
-![](Pasted%20image%2020240310195804.png)
-
-وقتی تو حالت `dev` هستیم `synchronize: true` روشن باشد اما در حالت `production` باید اونو خاموش کنیم.
-
-![](Pasted%20image%2020240310200101.png)
-
-در حالت عادی هر نامی که entity class ما داشته باشه lowerCase میشه و به عنوان نام Table در database در نظر گرفته میشه ، اگه بخوایم نام دیگه ای برای table مون در نظر بگیریم بصورت پایین عمل می کنیم:
-
-![](Pasted%20image%2020240310200255.png)
-
-حالا در گام بعد باید `column` های جدول coffee رو مشخص کنیم ؛ با استفاده از دکوراتور `@PrimaryGeneratedColumn()` برای property ی id و دکوراتور `@Column()` بقیه property ها و  می تونیم ستون های جدولمون رو مشخص کنیم:
-
-![](Pasted%20image%2020240310200910.png)
-
-![](Pasted%20image%2020240310200925.png)
-
-![](Pasted%20image%2020240310200953.png)
-
-همه column ها بصورت پیش فرض `required` هستند.
-
-حالا باید جدول مورد نظرمون رو در module مربوطه ثبت کنیم:
-
-![](Pasted%20image%2020240310201412.png)
-
-حالا جدول coffee در دیتابیس یه همچین شکلی خواهد داشت:
-![](Pasted%20image%2020240310201449.png)
 
 
-این typeORM از repository پشتیبانی می کنه ، به این معنا که هر enitity که می سازیم repository مربوط به خودشو خواهد داشت.
 
-
-![](Pasted%20image%2020240310202857.png)
-
-در واقع Repository یه abstract (انتزاع) از Data Source بوجود آورده و دارای متد های کاربردی فراوانی هست.
-
-با تزریق repository به class service مربوطه می تونیم از متد های repository استفاده کنیم.
-برای تزریق Repository از دکوراتور `@InjectRepository(name of entity)` استفاده می کنیم:
 
 ![](Pasted%20image%2020240310203214.png)
 

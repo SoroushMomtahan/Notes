@@ -1,10 +1,4 @@
-فریمورک nest بصورت داخلی از سه ORM برای ارتباط با دیتابیس پشتیبانی می کند و برای این سه orm پکیج هایی رو توسعه داده است:
-
-`@nestjs/typeorm` , `@nestjs/sequelize` , `@nestjs/mongoose`
-
-## TypeORM Integration---------------
-
-sql-server
+sql-server typeorm
 
 ```ts
 TypeOrmModule.forRoot({  
@@ -21,7 +15,7 @@ TypeOrmModule.forRoot({
   }
 ```
 
-mongo - Db
+mongo - Db typeorm
 
 ```ts
 TypeOrmModule.forRoot({  
