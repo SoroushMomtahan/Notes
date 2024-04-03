@@ -36,3 +36,29 @@ export default () => ({
 
 ---
 
+#pagination
+
+![](Pasted%20image%2020240402103947.png)
+
+---
+
+#validationPipe 
+
+```ts
+export default {
+  validation: (validationCompile) => {
+    return (req, res, next) => {
+      const body = req.body;
+      const validationResult = validationCompile(body);
+      if (validationResult !== true) {
+        return res.status(422).json({ message: 'Validation failed' });
+      }
+      next()
+    }
+  }
+}
+```
+
+```ts
+router.post('/country', validation(createOneValidation),countriesController.createOne);
+```
