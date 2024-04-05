@@ -38,7 +38,7 @@ export default () => ({
 
 #pagination
 
-![](Pasted%20image%2020240402103947.png)
+![](./Images/Pasted%20image%2020240402103947.png)
 
 ---
 
