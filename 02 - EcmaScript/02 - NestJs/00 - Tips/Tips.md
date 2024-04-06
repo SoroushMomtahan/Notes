@@ -1,3 +1,5 @@
+![](./Images/Pasted%20image%2020240302195338.png)[A Quick Introduction to NestJS | Mitrais Blog](https://www.mitrais.com/news-updates/a-quick-introduction-to-nestjs/)
+
 #exception
 
 هر جایی اگر بنابر شرطی نیاز به پرتاب exception بود ، همونجا پرتاب میکنیم 
