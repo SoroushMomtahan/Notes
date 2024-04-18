@@ -260,3 +260,11 @@ export class TimeoutInterceptor implements NestInterceptor {
 };
 ```
 
+```ts
+@Get()
+async findAll() {
+await new Promise(resolve => setTimeout(resolve, 5000));
+	return this. coffeesService.findAll();
+}
+```
+

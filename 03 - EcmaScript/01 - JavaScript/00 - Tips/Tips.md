@@ -62,3 +62,46 @@ export default {
 ```ts
 router.post('/country', validation(createOneValidation),countriesController.createOne);
 ```
+
+
+#sendResponse #express 
+
+```ts
+export const successResponse = ({
+  res,
+  statusCode = 200,
+  message = null,
+  data = null
+}) => {
+  return res
+    .status(statusCode)
+    .json({ status: statusCode, success: true, message, data });
+};
+export const errorResponse = ({
+  res,
+  statusCode,
+  message = null,
+  data = null
+}) => {
+  return res
+    .status(statusCode)
+    .json({ status: statusCode, success: false, message, data });
+};
+```
+
+```ts
+export default (req, res, next) => { return errorResponse({ res, statusCode: 404, message: '404 | Page Not Found' }); };
+```
+
+---
+
+#adminPanel
+
+[https://github.com/evershopcommerce/evershop](https://github.com/evershopcommerce/evershop)
+
+#mongoose #express 
+
+```ts
+schema.pre('save', async function (next) { try { this.password = bcrypt.hashSync(this.password); next(); } catch (err) { next(err); } }); schema.pre('updateOne', function (next) { try { const password = this.get('password'); if (password) { this.set({ password: bcrypt.hashSync(password) }); } next(); } catch (err) { next(err); } });
+```
+

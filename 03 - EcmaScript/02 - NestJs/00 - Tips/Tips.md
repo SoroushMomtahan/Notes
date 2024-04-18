@@ -62,7 +62,7 @@ export class UpdateUserDto {
 خود nest یه پکیجی رو ارائه داده که میاد property های یک کلاس رو به class دیگه میده با این تفاوت که اونا رو اختیاری شده به اون کلاس میده ، خب این پکیج رو نصب می کنیم:
 
 ```bash
-npm i @nest/mapped-types
+npm i @nestjs/mapped-types
 ```
 
 حالا property های کلاس `UpdateUserDto` رو پاک می کنیم و در ادامه:
@@ -142,9 +142,11 @@ export const TEST = 'TEST';
 
 #common
 
-پوشه ای تحت عنوان اشتراکی (common) ------------
+پوشه ای (ماژولی) تحت عنوان اشتراکی (common) ------------
 
 مواردی مانند ، Dtos ، constants ، types ، decorators و یا حتی module (بررسی شود!) هایی داریم ، که متعلق به یک ماژول خاص نیستند و راهکار اینه که اونارو در پوشه ای تحت عنوان common قرار بدیم.
+
+در واقع پوشه common خود نقش یک ماژول تحت عنوان commonModule رو داره ، در این ماژول ، رفتار هایی (functionality) که بین ماژول ها مشترک است را می آوریم
 
 ---
 
