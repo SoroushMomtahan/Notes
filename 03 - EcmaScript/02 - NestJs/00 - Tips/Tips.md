@@ -1,6 +1,8 @@
 
 ![](./Images/Pasted%20image%2020240302195338.png)[A Quick Introduction to NestJS | Mitrais Blog](https://www.mitrais.com/news-updates/a-quick-introduction-to-nestjs/)
 
+![](./Images/Pasted%20image%2020240504234815.png)
+
 ---
 
 #exception
@@ -149,4 +151,8 @@ export const TEST = 'TEST';
 در واقع پوشه common خود نقش یک ماژول تحت عنوان commonModule رو داره ، در این ماژول ، رفتار هایی (functionality) که بین ماژول ها مشترک است را می آوریم
 
 ---
+
+#Api
+
+![](./Images/Pasted%20image%2020240504235508.png)
 

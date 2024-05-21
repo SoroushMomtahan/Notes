@@ -1,3 +1,7 @@
+![](./Images/Pasted%20image%2020240504234004.png)
+
+![](./Images/Pasted%20image%2020240504234039.png)
+
 نقطه شروع یک برنامه nest ای از main.ts هست.
 
 ```ts
